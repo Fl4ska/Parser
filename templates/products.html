@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/products.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/dodo/cities">Города</a></li>
+            </ul>
+        </nav>
+        <h1>Товары</h1>
+    </header>
+    <main>
+        <section id="filter">
+            <form method="GET" action="{{ url_for('products', city_name=city_name) }}">
+                <label for="sort">Сортировать по:</label>
+                <select id="sort" name="sort">
+                    <option value="">-</option>
+                    <option value="asc">Цена (Сначала дорогие)</option>
+                    <option value="desc">Цена (С начала дешевые)</option>
+                </select>
+                <label for="city">Город:</label>
+                <select id="city" name="city">
+                    {% for city in cities %}
+                    {% if city.id == selected_city_id %}
+                    <option value="{{ city.id }}" selected>{{ city.name }}</option>
+                    {% else %}
+                    <option value="{{ city.id }}">{{ city.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                <label for="search">Поиск по названию:</label>
+                <input type="text" id="search" name="search" placeholder="Введите название товара">
+                <input type="submit" value="Поиск">
+            </form>
+        </section>
+        <section id="products">
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product">
+                    <div class="icon">
+                        <img src="data:image/png;base64,{{ product[3] }}" alt="product icon">
+                    </div>
+                    <div class="name">{{ product[1] }}</div>
+                    {% if product[4] %}
+                    <div class="price">{{ product[4] | format_price }}</div>
+                    {% else %}
+                    <div class="price">{{ product[3] | format_price }}</div>
+                    {% endif %}
+                    <a href="/price_history/{{ product[0] }}/{{ selected_city_id }}">Просмотреть историю цен</a>
+                </div>
+                {% else %}
+                <p>No products found.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

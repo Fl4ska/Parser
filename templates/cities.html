@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cities</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/cities.css') }}">
+    <script>
+        function searchCity() {
+            let searchInput = document.getElementById('city-search');
+            let searchText = searchInput.value.toLowerCase();
+            let cities = document.getElementsByClassName('city');
+            for (let i = 0; i < cities.length; i++) {
+                let city = cities[i];
+                let cityName = city.innerText.toLowerCase();
+                if (cityName.includes(searchText)) {
+                    city.style.display = 'block';
+                } else {
+                    city.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Выбор города:</h1>
+    <form method="GET" action="{{ url_for('products', city_name=city) }}">
+        <label for="product-search">Найти товар:</label>
+        <input type="text" id="product-search" name="product" placeholder="Введите название товара">
+        <button type="submit">Поиск</button>
+    </form>
+    <form method="GET" class="city-search-form">
+        <label for="city-search">Найти город:</label>
+        <input type="text" id="city-search" name="city" placeholder="Введите название города" onkeyup="searchCity()">
+    </form>
+    <div class="cities">
+        {% for city in cities %}
+        <div class="city">
+            <a href="{{ url_for('products', city_name=city) }}">{{ city }}</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% if products %}
+    <h2>Results:</h2>
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product">
+            <div class="icon">
+                <img src="{{ product[2] }}" alt="product icon">
+            </div>
+            <div class="name">{{ product[0] }}</div>
+            <div class="price">{{ product[1] | safe }}</div>
+        </div>
+        {% else %}
+        <p>No products found.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

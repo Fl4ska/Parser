@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Price History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/price_history.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <style>
+        /* Стили для графика */
+        #priceChart {
+            width: 300px;
+            height: 100px;
+        }
+
+        /* Стили для блока информации о товаре */
+        #productInfo {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+
+    <canvas id="priceChart"></canvas>
+
+    <div id="productInfo">
+        <h2>Информация о товаре</h2>
+        <p><strong>Название товара:</strong> {{ product_name }}</p>
+        {% if product_icon %}
+            <img src="data:image/png;base64,{{ product_icon }}" alt="Product Icon">
+        {% else %}
+            <p>No product icon available.</p>
+        {% endif %}
+
+        {% if current_price %}
+            <p><strong>Текущая цена:</strong> {{ current_price }} &#8381;</p>
+        {% else %}
+            <p>No price information available.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Данные для графика
+        let priceData = {
+            labels: [
+                {% for entry in price_history %}
+                    "{{ entry[0] }}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Цена',
+                data: [
+                    {% for entry in price_history %}
+                        {{ entry[1] }},
+                    {% endfor %}
+                ],
+                borderColor: 'blue',
+                fill: false,
+                tension: 0.4 // Значение tension от 0 до 1 для управления кривизной линии
+            }]
+        };
+
+        // Создание графика
+        let ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: priceData
+        });
+    </script>
+</body>
+</html>

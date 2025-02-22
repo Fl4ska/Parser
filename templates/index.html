@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose a site to parse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/index.css') }}">
+</head>
+<body>
+    <h1>Выберите сайт для извлечения данных:</h1>
+    <form method="POST" action="/">
+        <select name="site">
+            {% for site in sites %}
+            <option value="{{ site }}">{{ site }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <input type="submit" value="Извлечь данные">
+    </form>
+</body>
+</html>

@@ -1,0 +1,10 @@
+#priceChart {
+    width: 300px;
+    height: 100px;
+}
+
+#productInfo {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
